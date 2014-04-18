@@ -933,7 +933,7 @@ public class XmlTagCompletionProposalComputer  extends AbstractXmlCompletionProp
 					// Do no insert a new tag ending chars (and/or closing tag) with the same name 
 					// (just shift the cursor position to the end of the name)
 					
-					replacementString = replacementTagName; 
+					replacementString = '<' + replacementTagName; 
 					replacementLength += end - getOffset();
 				} else {
 					if (!replacementString.endsWith("/>")) { //$NON-NLS-1$
@@ -1021,10 +1021,12 @@ public class XmlTagCompletionProposalComputer  extends AbstractXmlCompletionProp
 	}
 
 	private String extractTagName(String tag) {
-		int offset = 0;
-		while (offset < tag.length() && !Character.isWhitespace(tag.charAt(offset)))
+		int start = tag.startsWith("<") ? 1 : 0;
+		int offset = start;
+		while (offset < tag.length() && !Character.isWhitespace(tag.charAt(offset)) &&
+				'>' != tag.charAt(offset) && '<' != tag.charAt(offset))
 			offset++;
-		return tag.substring(0, offset);
+		return tag.substring(start, offset);
 	}
 	
 	@Override
